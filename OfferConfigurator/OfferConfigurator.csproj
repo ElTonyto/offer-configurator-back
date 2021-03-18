@@ -15,6 +15,7 @@
     <Folder Include="Models\" />
     <Folder Include="Databases\" />
     <Folder Include="Services\" />
+    <Folder Include="Response\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="volumes\" />

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OfferConfigurator.Services;
 using OfferConfigurator.Models;
+using OfferConfigurator.Response;
 using System.Collections.Generic;
 
 namespace OfferConfigurator.Controllers
@@ -19,7 +20,7 @@ namespace OfferConfigurator.Controllers
 
         [HttpGet]
         public ActionResult<List<Catalog>> Get() =>
-            _catalogService.Get();
+            StatusCode(200, new HttpResponse { Status = 201, Type = "SUCCESS", Message = "Get all catalog", Data = _catalogService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetCatalog")]
         public ActionResult<Catalog> Get(string id)
@@ -28,23 +29,26 @@ namespace OfferConfigurator.Controllers
 
             if (catalog == null)
             {
-                return NotFound();
+                return StatusCode(409, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
-            return catalog;
+            return StatusCode(201, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get a catalog", Data = catalog });
         }
 
         [HttpPost]
         public ActionResult<Catalog> Create(CatalogBody catalogBody)
         {
-            Catalog catalog = _catalogService.Create(catalogBody);
+            Catalog alreadyExist = _catalogService.GetByName(catalogBody.Name);
 
-            if (catalog == null)
+            if (alreadyExist != null)
             {
-                return NotFound();
+                return StatusCode(409, new HttpResponse { Status = 409, Type = "CONFLICT", Message = "Catalog already exists", Data = new List<object>() });
             }
 
-            return CreatedAtRoute("GetCatalog", new { id = catalog.Id.ToString() }, catalog);
+            Catalog catalog = _catalogService.Create(catalogBody);
+
+            object result = CreatedAtRoute("GetCatalog", new { id = catalog.Id.ToString() }, catalog).Value;
+            return StatusCode(201, new HttpResponse { Status = 201, Type = "CREATED", Message = "Catalog created", Data = result });
         }
 
         [HttpPut("{id:length(24)}")]
@@ -54,12 +58,13 @@ namespace OfferConfigurator.Controllers
 
             if (catalog == null)
             {
-                return NotFound();
+                return StatusCode(409, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
             _catalogService.Update(id, catalogIn);
 
-            return NoContent();
+            object result = CreatedAtRoute("GetCatalog", new { id = catalog.Id.ToString() }, catalog).Value;
+            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Catalog changed", Data = result });
         }
 
         [HttpDelete("{id:length(24)}")]
@@ -69,12 +74,12 @@ namespace OfferConfigurator.Controllers
 
             if (catalog == null)
             {
-                return NotFound();
+                return StatusCode(409, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
             _catalogService.Remove(catalog.Id);
 
-            return NoContent();
+            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Catalog deleted", Data = new List<object>() });
         }
     }
 }

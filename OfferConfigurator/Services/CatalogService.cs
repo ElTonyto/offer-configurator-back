@@ -34,6 +34,18 @@ namespace OfferConfigurator.Services
             return catalog;
         }
 
+        public Catalog GetByName(string name)
+        {
+            Catalog catalog = _catalog.Find<Catalog>(catalog => catalog.Name == name).FirstOrDefault();
+
+            if (catalog == null)
+            {
+                return null;
+            }
+
+            return catalog;
+        }
+
         public Catalog Create(CatalogBody catalogBody)
         {
             Catalog catalog = new Catalog
