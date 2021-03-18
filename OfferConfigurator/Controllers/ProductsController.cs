@@ -20,7 +20,7 @@ namespace OfferConfigurator.Controllers
 
         [HttpGet]
         public ActionResult<List<Product>> Get() =>
-           StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get all offers", Data = _productService.Get() });
+           StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get all products", Data = _productService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetProduct")]
         public ActionResult<Product> Get(string id)
