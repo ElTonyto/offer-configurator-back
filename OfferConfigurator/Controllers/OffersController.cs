@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OfferConfigurator.Services;
 using OfferConfigurator.Models;
+using OfferConfigurator.Response;
 using System.Collections.Generic;
 
 namespace OfferConfigurator.Controllers
@@ -19,7 +20,7 @@ namespace OfferConfigurator.Controllers
 
         [HttpGet]
         public ActionResult<List<Offer>> Get() =>
-            _offerService.Get();
+             StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get all offers", Data = _offerService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetOffer")]
         public ActionResult<Offer> Get(string id)
@@ -28,23 +29,26 @@ namespace OfferConfigurator.Controllers
 
             if (offer == null)
             {
-                return NotFound();
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
             }
 
-            return offer;
+            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get an offer", Data = offer });
         }
 
         [HttpPost]
         public ActionResult<Offer> Create(OfferBody offerBody)
         {
-            Offer offer = _offerService.Create(offerBody);
+            Product product = _offerService.productService.Get(offerBody.ProductId);
 
-            if (offer == null)
+            if (product == null)
             {
-                return NotFound();
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
             }
 
-            return CreatedAtRoute("GetOffer", new { id = offer.Id.ToString() }, offer);
+            Offer offer = _offerService.Create(offerBody, product);
+
+            object result = CreatedAtRoute("GetOffer", new { id = offer.Id.ToString() }, offer).Value;
+            return StatusCode(201, new HttpResponse { Status = 201, Type = "CREATED", Message = "Offer created", Data = result });
         }
 
         [HttpPut("{id:length(24)}")]
@@ -54,12 +58,13 @@ namespace OfferConfigurator.Controllers
 
             if (offer == null)
             {
-                return NotFound();
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
             }
 
             _offerService.Update(id, offerIn);
 
-            return NoContent();
+            object result = CreatedAtRoute("GetOffer", new { id = offer.Id.ToString() }, offer).Value;
+            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Offer changed", Data = result });
         }
 
         [HttpDelete("{id:length(24)}")]
@@ -69,12 +74,12 @@ namespace OfferConfigurator.Controllers
 
             if (offer == null)
             {
-                return NotFound();
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
             }
 
             _offerService.Remove(offer.Id);
 
-            return NoContent();
+            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Offer deleted", Data = new List<object>() });
         }
     }
 }

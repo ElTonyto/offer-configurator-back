@@ -10,7 +10,7 @@ namespace OfferConfigurator.Services
     public class OfferService
     {
         private readonly IMongoCollection<Offer> _offer;
-        private ProductService productService;
+        public ProductService productService;
 
         public OfferService(IOfferConfiguratorDatabaseSettings settings)
         {
@@ -24,27 +24,11 @@ namespace OfferConfigurator.Services
         public List<Offer> Get() =>
             _offer.Find(offer => true).ToList();
 
-        public Offer Get(string id)
+        public Offer Get(string id) =>
+            _offer.Find<Offer>(offer => offer.Id == id).FirstOrDefault();
+
+        public Offer Create(OfferBody offerBody, Product product)
         {
-            Offer offer = _offer.Find<Offer>(offer => offer.Id == id).FirstOrDefault();
-
-            if (offer == null)
-            {
-                return null;
-            }
-
-            return offer;
-        }
-
-        public Offer Create(OfferBody offerBody)
-        {
-            Product product = productService.Get(offerBody.ProductId);
-
-            if (product == null)
-            {
-                return null;
-            }
-
             Offer offer = new Offer
             {
                 CreatedAt = DateTime.Now,
