@@ -79,9 +79,9 @@ namespace OfferConfigurator.Controllers
             }
 
             offer.Product = product;
-            offer.IsActive = (offerBody.IsActive != offer.IsActive) ? offerBody.IsActive : offer.IsActive;
-            offer.StartAt = (offerBody.StartAt == new DateTime()) ? offer.StartAt : offerBody.StartAt;
-            offer.EndAt = (offerBody.EndAt == new DateTime()) ? offer.EndAt : offerBody.EndAt;
+            offer.IsActive = (offerBody.IsActive == null) ? offer.IsActive : offerBody.IsActive;
+            offer.StartAt = (offerBody.StartAt == null) ? offer.StartAt : offerBody.StartAt;
+            offer.EndAt = (offerBody.EndAt == null) ? offer.EndAt : offerBody.EndAt;
             offer.SubmittedBy = (offerBody.SubmittedBy == null) ? offer.SubmittedBy : offerBody.SubmittedBy;
             offer.Price = (offerBody.Price == null) ? offer.Price : offerBody.Price;
 
