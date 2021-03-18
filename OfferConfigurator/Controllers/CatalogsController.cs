@@ -20,7 +20,7 @@ namespace OfferConfigurator.Controllers
 
         [HttpGet]
         public ActionResult<List<Catalog>> Get() =>
-            StatusCode(200, new HttpResponse { Status = 201, Type = "SUCCESS", Message = "Get all catalogs", Data = _catalogService.Get() });
+            StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get all catalogs", Data = _catalogService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetCatalog")]
         public ActionResult<Catalog> Get(string id)
@@ -32,7 +32,7 @@ namespace OfferConfigurator.Controllers
                 return StatusCode(409, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
-            return StatusCode(201, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get a catalog", Data = catalog });
+            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get a catalog", Data = catalog });
         }
 
         [HttpPost]
