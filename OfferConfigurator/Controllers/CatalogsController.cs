@@ -29,7 +29,7 @@ namespace OfferConfigurator.Controllers
 
             if (catalog == null)
             {
-                return StatusCode(409, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
             return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get a catalog", Data = catalog });
@@ -58,7 +58,7 @@ namespace OfferConfigurator.Controllers
 
             if (catalog == null)
             {
-                return StatusCode(409, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
             _catalogService.Update(id, catalogIn);
@@ -74,7 +74,7 @@ namespace OfferConfigurator.Controllers
 
             if (catalog == null)
             {
-                return StatusCode(409, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
             _catalogService.Remove(catalog.Id);
