@@ -10,7 +10,7 @@ namespace OfferConfigurator.Services
     public class ProductService
     {
         private readonly IMongoCollection<Product> _product;
-        private CatalogService _catalogService;
+        public CatalogService catalogService;
 
         public ProductService(IOfferConfiguratorDatabaseSettings settings)
         {
@@ -18,7 +18,7 @@ namespace OfferConfigurator.Services
             var database = client.GetDatabase(settings.DatabaseName);
 
             _product = database.GetCollection<Product>(settings.ProductsCollectionName);
-            _catalogService = new CatalogService(settings);
+            catalogService = new CatalogService(settings);
         }
 
         public List<Product> Get() =>
@@ -29,13 +29,6 @@ namespace OfferConfigurator.Services
 
         public Product Create(ProductBody productBody)
         {
-            Catalog catalog = _catalogService.Get(productBody.CatalogId);
-
-            if (catalog == null)
-            {
-                return null;
-            }
-
             Product product = new Product
             {
                 Name = productBody.Name,
