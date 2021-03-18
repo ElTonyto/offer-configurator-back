@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace OfferConfigurator.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly ProductService _productService;
 
-        public ProductController(ProductService productService)
+        public ProductsController(ProductService productService)
         {
             _productService = productService;
         }

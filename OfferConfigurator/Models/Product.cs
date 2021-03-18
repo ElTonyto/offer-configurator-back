@@ -9,10 +9,7 @@ namespace OfferConfigurator.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-
-        [BsonElement("Name")]
         public string Name { get; set; }
-
         public string Description { get; set; }
         public string Option { get; set; } // TODO: Enum je pense
     }
