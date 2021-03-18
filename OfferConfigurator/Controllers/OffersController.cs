@@ -52,8 +52,15 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Offer offerIn)
+        public IActionResult Update(string id, OfferBody offerBody)
         {
+            Product checkProduct = _offerService.productService.Get(offerBody.ProductId);
+
+            if (checkProduct == null && offerBody.ProductId != null)
+            {
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
+            }
+
             Offer offer = _offerService.Get(id);
 
             if (offer == null)
@@ -61,7 +68,24 @@ namespace OfferConfigurator.Controllers
                 return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
             }
 
-            _offerService.Update(id, offerIn);
+            Product product;
+
+            if (offerBody.ProductId != null)
+            {
+                product = _offerService.productService.Get(offerBody.ProductId);
+            } else
+            {
+                product = _offerService.productService.Get(offer.Product.Id);
+            }
+
+            offer.Product = product;
+            offer.IsActive = (offerBody.IsActive != offer.IsActive) ? offerBody.IsActive : offer.IsActive;
+            offer.StartAt = (offerBody.StartAt == new DateTime()) ? offer.StartAt : offerBody.StartAt;
+            offer.EndAt = (offerBody.EndAt == new DateTime()) ? offer.EndAt : offerBody.EndAt;
+            offer.SubmittedBy = (offerBody.SubmittedBy == null) ? offer.SubmittedBy : offerBody.SubmittedBy;
+            offer.Price = (offerBody.Price == null) ? offer.Price : offerBody.Price;
+
+            _offerService.Update(id, offer);
 
             object result = CreatedAtRoute("GetOffer", new { id = offer.Id.ToString() }, offer).Value;
             return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Offer changed", Data = result });
