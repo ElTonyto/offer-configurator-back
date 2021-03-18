@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  dotnet:
+    build: .
+    image: offer-configurator-api
+    restart: always
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    ports:
+      - "9090:80"
+
+  mongo:
+    image: mongo
+    restart: on-failure
+    volumes:
+      - ./volumes/db/mongo-volume:/data/db
+    ports:
+     - "27017-27019:27017-27019"
