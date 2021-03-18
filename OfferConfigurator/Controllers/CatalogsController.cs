@@ -52,7 +52,7 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Catalog catalogIn)
+        public IActionResult Update(string id, CatalogBody catalogBody)
         {
             Catalog catalog = _catalogService.Get(id);
 
@@ -61,7 +61,9 @@ namespace OfferConfigurator.Controllers
                 return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
-            _catalogService.Update(id, catalogIn);
+            catalog.Name = catalogBody.Name;
+
+            _catalogService.Update(id, catalog);
 
             object result = CreatedAtRoute("GetCatalog", new { id = catalog.Id.ToString() }, catalog).Value;
             return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Catalog changed", Data = result });
