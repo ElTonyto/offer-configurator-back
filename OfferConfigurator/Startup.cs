@@ -34,7 +34,9 @@ namespace OfferConfigurator
             services.AddSingleton<IOfferConfiguratorDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<OfferConfiguratorDatabaseSettings>>().Value);
 
+            services.AddSingleton<OfferService>();
             services.AddSingleton<ProductService>();
+            services.AddSingleton<CatalogService>();
             services.AddControllers();
             services.AddSwaggerGen();
         }

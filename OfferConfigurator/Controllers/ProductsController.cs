@@ -35,9 +35,9 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Product> Create(Product product)
+        public ActionResult<Product> Create(ProductBody productBody)
         {
-            _productService.Create(product);
+            Product product =_productService.Create(productBody);
 
             return CreatedAtRoute("GetProduct", new { id = product.Id.ToString() }, product);
         }
@@ -45,7 +45,7 @@ namespace OfferConfigurator.Controllers
         [HttpPut("{id:length(24)}")]
         public IActionResult Update(string id, Product productIn)
         {
-            var product = _productService.Get(id);
+            Product product = _productService.Get(id);
 
             if (product == null)
             {
@@ -60,7 +60,7 @@ namespace OfferConfigurator.Controllers
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete(string id)
         {
-            var product = _productService.Get(id);
+            Product product = _productService.Get(id);
 
             if (product == null)
             {
