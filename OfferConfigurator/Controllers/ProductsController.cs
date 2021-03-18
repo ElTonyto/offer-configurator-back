@@ -52,8 +52,15 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Product productIn)
+        public IActionResult Update(string id, ProductBody productBody)
         {
+            Catalog checkCatalog = _productService.catalogService.Get(productBody.CatalogId);
+
+            if (checkCatalog == null && productBody.CatalogId != null)
+            {
+                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+            }
+
             Product product = _productService.Get(id);
 
             if (product == null)
@@ -61,7 +68,15 @@ namespace OfferConfigurator.Controllers
                 return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
             }
 
-            _productService.Update(id, productIn);
+            product.CatalogId = (productBody.CatalogId == null) ? product.CatalogId : productBody.CatalogId;
+            product.Brand = (productBody.Brand == null) ? product.Brand : productBody.Brand;
+            product.Description = (productBody.Description == null) ? product.Description : productBody.Description;
+            product.Name = (productBody.Name == null) ? product.Name : productBody.Name;
+            product.Options = (productBody.Options == null) ? product.Options : productBody.Options;
+            product.Price = (productBody.Price == null) ? product.Price : productBody.Price;
+            product.RemainingStock = (productBody.RemainingStock == null) ? product.RemainingStock : productBody.RemainingStock;
+
+            _productService.Update(id, product);
 
             object result = CreatedAtRoute("GetProduct", new { id = product.Id.ToString() }, product).Value;
             return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Product changed", Data = result });
