@@ -22,29 +22,11 @@ namespace OfferConfigurator.Services
         public List<Catalog> Get() =>
             _catalog.Find(catalog => true).ToList();
 
-        public Catalog Get(string id)
-        {
-            Catalog catalog = _catalog.Find<Catalog>(catalog => catalog.Id == id).FirstOrDefault();
+        public Catalog Get(string id) =>
+            _catalog.Find<Catalog>(catalog => catalog.Id == id).FirstOrDefault();
 
-            if (catalog == null)
-            {
-                return null;
-            }
-
-            return catalog;
-        }
-
-        public Catalog GetByName(string name)
-        {
-            Catalog catalog = _catalog.Find<Catalog>(catalog => catalog.Name == name).FirstOrDefault();
-
-            if (catalog == null)
-            {
-                return null;
-            }
-
-            return catalog;
-        }
+        public Catalog GetByName(string name) =>
+            _catalog.Find<Catalog>(catalog => catalog.Name == name).FirstOrDefault();
 
         public Catalog Create(CatalogBody catalogBody)
         {
