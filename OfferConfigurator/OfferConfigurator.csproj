@@ -16,4 +16,7 @@
     <Folder Include="Databases\" />
     <Folder Include="Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="volumes\" />
+  </ItemGroup>
 </Project>
