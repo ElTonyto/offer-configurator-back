@@ -57,6 +57,12 @@ namespace OfferConfigurator.Controllers
             if (productBody.ParentId != null && productBody.AllOptions != null) {
                 return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "AllOptions should be null as your product is not a parent", Data = new List<object>() });
             }
+            if (productBody.ParentId != null) {
+                Product parent = _productService.Get(productBody.ParentId);
+                if (parent == null){
+                    return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Parent product not found", Data = new List<object>() });
+                }
+            }
 
             Product product =_productService.Create(productBody);
 
@@ -82,6 +88,12 @@ namespace OfferConfigurator.Controllers
             }
             if (productBody.ParentId != null && productBody.AllOptions != null) {
                 return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "AllOptions should be null as your product is not a parent", Data = new List<object>() });
+            }
+            if (productBody.ParentId != null) {
+                Product parent = _productService.Get(productBody.ParentId);
+                if (parent == null){
+                    return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Parent product not found", Data = new List<object>() });
+                }
             }
 
             Product product = _productService.Get(id);
