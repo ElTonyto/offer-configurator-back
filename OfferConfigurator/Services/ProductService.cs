@@ -31,6 +31,7 @@ namespace OfferConfigurator.Services
         {
             Product product = new Product
             {
+                ParentId = productBody.ParentId,
                 Name = productBody.Name,
                 CreatedAt = DateTime.Now,
                 Price = productBody.Price,
@@ -38,7 +39,8 @@ namespace OfferConfigurator.Services
                 CatalogId = productBody.CatalogId,
                 RemainingStock = productBody.RemainingStock,
                 Description = productBody.Description,
-                Options = productBody.Options
+                Options = productBody.Options,
+                AllOptions = productBody.AllOptions
             };
 
             _product.InsertOne(product);

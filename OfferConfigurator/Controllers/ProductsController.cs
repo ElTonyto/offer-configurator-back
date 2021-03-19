@@ -68,13 +68,16 @@ namespace OfferConfigurator.Controllers
                 return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
             }
 
+            product.ParentId = (productBody.ParentId == null) ? product.ParentId : productBody.ParentId;
             product.CatalogId = (productBody.CatalogId == null) ? product.CatalogId : productBody.CatalogId;
             product.Brand = (productBody.Brand == null) ? product.Brand : productBody.Brand;
             product.Description = (productBody.Description == null) ? product.Description : productBody.Description;
             product.Name = (productBody.Name == null) ? product.Name : productBody.Name;
-            product.Options = (productBody.Options == null) ? product.Options : productBody.Options;
             product.Price = (productBody.Price == null) ? product.Price : productBody.Price;
             product.RemainingStock = (productBody.RemainingStock == null) ? product.RemainingStock : productBody.RemainingStock;
+            product.Options = (productBody.Options == null) ? product.Options : productBody.Options;
+            product.AllOptions = (productBody.AllOptions == null) ? product.AllOptions : productBody.AllOptions;
+
 
             _productService.Update(id, product);
 
