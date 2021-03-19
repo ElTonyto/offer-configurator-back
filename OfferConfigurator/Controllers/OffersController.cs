@@ -4,6 +4,7 @@ using OfferConfigurator.Services;
 using OfferConfigurator.Models;
 using OfferConfigurator.Response;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OfferConfigurator.Controllers
 {
@@ -12,10 +13,12 @@ namespace OfferConfigurator.Controllers
     public class OffersController : ControllerBase
     {
         private readonly OfferService _offerService;
+        private readonly VerifyHeaderId _verifyHeader;
 
-        public OffersController(OfferService offerService)
+        public OffersController(OfferService offerService, VerifyHeaderId verifyHeader)
         {
             _offerService = offerService;
+            _verifyHeader = verifyHeader;
         }
 
         [HttpGet]
@@ -36,8 +39,11 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Offer> Create(OfferBody offerBody)
+        public ActionResult<Offer> Create([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, OfferBody offerBody)
         {
+            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
+            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+
             Product product = _offerService.productService.Get(offerBody.ProductId);
 
             if (product == null)
@@ -52,8 +58,11 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, OfferBody offerBody)
+        public ActionResult<Offer> Update([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, string id, OfferBody offerBody)
         {
+            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
+            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+
             Product checkProduct = _offerService.productService.Get(offerBody.ProductId);
 
             if (checkProduct == null && offerBody.ProductId != null)
@@ -92,8 +101,11 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, string id)
         {
+            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
+            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+
             Offer offer = _offerService.Get(id);
 
             if (offer == null)

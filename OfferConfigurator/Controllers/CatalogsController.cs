@@ -4,6 +4,7 @@ using OfferConfigurator.Services;
 using OfferConfigurator.Models;
 using OfferConfigurator.Response;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OfferConfigurator.Controllers
 {
@@ -12,10 +13,12 @@ namespace OfferConfigurator.Controllers
     public class CatalogsController : ControllerBase
     {
         private readonly CatalogService _catalogService;
+        private readonly VerifyHeaderId _verifyHeader;
 
-        public CatalogsController(CatalogService catalogService)
+        public CatalogsController(CatalogService catalogService, VerifyHeaderId verifyHeader)
         {
             _catalogService = catalogService;
+            _verifyHeader = verifyHeader;
         }
 
         [HttpGet]
@@ -36,8 +39,11 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Catalog> Create(CatalogBody catalogBody)
+        public ActionResult<Catalog> Create([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, CatalogBody catalogBody)
         {
+            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
+            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+
             Catalog alreadyExist = _catalogService.GetByName(catalogBody.Name);
 
             if (alreadyExist != null)
@@ -52,8 +58,11 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, CatalogBody catalogBody)
+        public ActionResult<Catalog> Update([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, string id, CatalogBody catalogBody)
         {
+            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
+            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+
             Catalog catalog = _catalogService.Get(id);
 
             if (catalog == null)
@@ -70,8 +79,11 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, string id)
         {
+            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
+            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+
             Catalog catalog = _catalogService.Get(id);
 
             if (catalog == null)

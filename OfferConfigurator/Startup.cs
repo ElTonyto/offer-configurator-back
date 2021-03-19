@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using OfferConfigurator.Databases;
+using OfferConfigurator.Response;
 using OfferConfigurator.Services;
 
 namespace OfferConfigurator
@@ -40,6 +35,9 @@ namespace OfferConfigurator
             services.AddSingleton<OfferService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<CatalogService>();
+            services.AddSingleton<UserService>();
+            services.AddSingleton<AuthService>();
+            services.AddSingleton<VerifyHeaderId>();
             services.AddControllers();
             services.AddSwaggerGen();
         }
