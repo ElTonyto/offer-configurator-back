@@ -51,6 +51,13 @@ namespace OfferConfigurator.Controllers
                 return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
+            if (productBody.ParentId == null && productBody.Options != null) {
+                return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Options should be null as your product is a parent", Data = new List<object>() });
+            }
+            if (productBody.ParentId != null && productBody.AllOptions != null) {
+                return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "AllOptions should be null as your product is not a parent", Data = new List<object>() });
+            }
+
             Product product =_productService.Create(productBody);
 
             object result = CreatedAtRoute("GetProduct", new { id = product.Id.ToString() }, product).Value;
@@ -68,6 +75,13 @@ namespace OfferConfigurator.Controllers
             if (checkCatalog == null && productBody.CatalogId != null)
             {
                 return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+            }
+
+            if (productBody.ParentId == null && productBody.Options != null) {
+                return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Options should be null as your product is a parent", Data = new List<object>() });
+            }
+            if (productBody.ParentId != null && productBody.AllOptions != null) {
+                return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "AllOptions should be null as your product is not a parent", Data = new List<object>() });
             }
 
             Product product = _productService.Get(id);
