@@ -13,12 +13,10 @@ namespace OfferConfigurator.Controllers
     public class CatalogsController : ControllerBase
     {
         private readonly CatalogService _catalogService;
-        private readonly VerifyHeaderId _verifyHeader;
 
-        public CatalogsController(CatalogService catalogService, VerifyHeaderId verifyHeader)
+        public CatalogsController(CatalogService catalogService)
         {
             _catalogService = catalogService;
-            _verifyHeader = verifyHeader;
         }
 
         [HttpGet]
@@ -39,10 +37,10 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Catalog> Create([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, CatalogBody catalogBody)
+        public ActionResult<Catalog> Create([FromHeader(Name = "X-ROLE")][Required] string role, CatalogBody catalogBody)
         {
-            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
-            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Catalog alreadyExist = _catalogService.GetByName(catalogBody.Name);
 
@@ -58,10 +56,10 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public ActionResult<Catalog> Update([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, string id, CatalogBody catalogBody)
+        public ActionResult<Catalog> Update([FromHeader(Name = "X-ROLE")][Required] string role, string id, CatalogBody catalogBody)
         {
-            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
-            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Catalog catalog = _catalogService.Get(id);
 
@@ -79,10 +77,10 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete([FromHeader(Name = "X-HEADER-ID")][Required] string headerId, string id)
+        public IActionResult Delete([FromHeader(Name = "X-ROLE")][Required] string role, string id)
         {
-            if (headerId == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id not found", Data = new List<object>() });
-            if (!_verifyHeader.checkUser(headerId)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Header id incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Catalog catalog = _catalogService.Get(id);
 

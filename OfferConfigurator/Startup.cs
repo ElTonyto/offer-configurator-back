@@ -35,9 +35,6 @@ namespace OfferConfigurator
             services.AddSingleton<OfferService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<CatalogService>();
-            services.AddSingleton<UserService>();
-            services.AddSingleton<AuthService>();
-            services.AddSingleton<VerifyHeaderId>();
             services.AddControllers();
             services.AddSwaggerGen();
         }
