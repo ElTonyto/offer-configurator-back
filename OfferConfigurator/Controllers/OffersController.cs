@@ -21,7 +21,7 @@ namespace OfferConfigurator.Controllers
 
         [HttpGet]
         public ActionResult<List<Offer>> Get() =>
-             StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get all offers", Data = _offerService.Get() });
+             StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all offers", Data = _offerService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetOffer")]
         public ActionResult<Offer> Get(string id)
@@ -30,49 +30,49 @@ namespace OfferConfigurator.Controllers
 
             if (offer == null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
             }
 
-            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get an offer", Data = offer });
+            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get an offer", Data = offer });
         }
 
         [HttpPost]
         public ActionResult<Offer> Create([FromHeader(Name = "X-ROLE")][Required] string role, OfferBody offerBody)
         {
-            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
-            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Product product = _offerService.productService.Get(offerBody.ProductId);
 
             if (product == null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
             }
 
             Offer offer = _offerService.Create(offerBody, product);
 
             object result = CreatedAtRoute("GetOffer", new { id = offer.Id.ToString() }, offer).Value;
-            return StatusCode(201, new HttpResponse { Status = 201, Type = "CREATED", Message = "Offer created", Data = result });
+            return StatusCode(201, new HttpResponse { Status = "Success", Type = "CREATED", Message = "Offer created", Data = result });
         }
 
         [HttpPut("{id:length(24)}")]
         public ActionResult<Offer> Update([FromHeader(Name = "X-ROLE")][Required] string role, string id, OfferBody offerBody)
         {
-            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
-            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Product checkProduct = _offerService.productService.Get(offerBody.ProductId);
 
             if (checkProduct == null && offerBody.ProductId != null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
             }
 
             Offer offer = _offerService.Get(id);
 
             if (offer == null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
             }
 
             Product product;
@@ -95,25 +95,25 @@ namespace OfferConfigurator.Controllers
             _offerService.Update(id, offer);
 
             object result = CreatedAtRoute("GetOffer", new { id = offer.Id.ToString() }, offer).Value;
-            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Offer changed", Data = result });
+            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Offer changed", Data = result });
         }
 
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete([FromHeader(Name = "X-ROLE")][Required] string role, string id)
         {
-            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
-            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Offer offer = _offerService.Get(id);
 
             if (offer == null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
             }
 
             _offerService.Remove(offer.Id);
 
-            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Offer deleted", Data = new List<object>() });
+            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Offer deleted", Data = new List<object>() });
         }
     }
 }

@@ -21,7 +21,7 @@ namespace OfferConfigurator.Controllers
 
         [HttpGet]
         public ActionResult<List<Catalog>> Get() =>
-            StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get all catalogs", Data = _catalogService.Get() });
+            StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all catalogs", Data = _catalogService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetCatalog")]
         public ActionResult<Catalog> Get(string id)
@@ -30,42 +30,42 @@ namespace OfferConfigurator.Controllers
 
             if (catalog == null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
-            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Get a catalog", Data = catalog });
+            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get a catalog", Data = catalog });
         }
 
         [HttpPost]
         public ActionResult<Catalog> Create([FromHeader(Name = "X-ROLE")][Required] string role, CatalogBody catalogBody)
         {
-            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
-            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Catalog alreadyExist = _catalogService.GetByName(catalogBody.Name);
 
             if (alreadyExist != null)
             {
-                return StatusCode(409, new HttpResponse { Status = 409, Type = "CONFLICT", Message = "Catalog already exists", Data = new List<object>() });
+                return StatusCode(409, new HttpResponse { Status = "Error", Type = "CONFLICT", Message = "Catalog already exists", Data = new List<object>() });
             }
 
             Catalog catalog = _catalogService.Create(catalogBody);
 
             object result = CreatedAtRoute("GetCatalog", new { id = catalog.Id.ToString() }, catalog).Value;
-            return StatusCode(201, new HttpResponse { Status = 201, Type = "CREATED", Message = "Catalog created", Data = result });
+            return StatusCode(201, new HttpResponse { Status = "Success", Type = "CREATED", Message = "Catalog created", Data = result });
         }
 
         [HttpPut("{id:length(24)}")]
         public ActionResult<Catalog> Update([FromHeader(Name = "X-ROLE")][Required] string role, string id, CatalogBody catalogBody)
         {
-            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
-            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Catalog catalog = _catalogService.Get(id);
 
             if (catalog == null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
             catalog.Name = catalogBody.Name;
@@ -73,25 +73,25 @@ namespace OfferConfigurator.Controllers
             _catalogService.Update(id, catalog);
 
             object result = CreatedAtRoute("GetCatalog", new { id = catalog.Id.ToString() }, catalog).Value;
-            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Catalog changed", Data = result });
+            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Catalog changed", Data = result });
         }
 
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete([FromHeader(Name = "X-ROLE")][Required] string role, string id)
         {
-            if (role == null) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
-            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = 400, Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
+            if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
+            if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
 
             Catalog catalog = _catalogService.Get(id);
 
             if (catalog == null)
             {
-                return StatusCode(404, new HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
+                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Catalog not found", Data = new List<object>() });
             }
 
             _catalogService.Remove(catalog.Id);
 
-            return StatusCode(200, new HttpResponse { Status = 200, Type = "SUCCESS", Message = "Catalog deleted", Data = new List<object>() });
+            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Catalog deleted", Data = new List<object>() });
         }
     }
 }

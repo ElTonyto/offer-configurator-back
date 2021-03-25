@@ -26,6 +26,18 @@ namespace OfferConfigurator
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
+            });
+
             services.Configure<OfferConfiguratorDatabaseSettings>(
                 Configuration.GetSection(nameof(OfferConfiguratorDatabaseSettings)));
 
@@ -48,7 +60,7 @@ namespace OfferConfigurator
                 if (context.Response.StatusCode == 404)
                 {
                     context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(new Response.HttpResponse { Status = 404, Type = "NOT_FOUND", Message = "Route doesn't exist", Data = new List<object>() }));
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(new Response.HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Route doesn't exist", Data = new List<object>() }));
                 }
             });
 
@@ -63,6 +75,8 @@ namespace OfferConfigurator
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 
