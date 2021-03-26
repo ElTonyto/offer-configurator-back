@@ -18,8 +18,8 @@ namespace OfferConfigurator.Models
         public Nullable<int> RemainingStock { get; set; }
         public string Price { get; set; }
         public string Brand { get; set; }
-        public Dictionary<string, List<string>> Options { get; set; }
-        public List<Dictionary<string, List<string>>> AllOptions { get; set; }
+        public List<Options> Options { get; set; }
+        public List<Options> AllOptions { get; set; }
     }
 
     public class ProductBody
@@ -31,7 +31,13 @@ namespace OfferConfigurator.Models
         public string Price { get; set; }
         public string Brand { get; set; }
         public Nullable<int> RemainingStock { get; set; }
-        public Dictionary<string, List<string>> Options { get; set; }
-        public List<Dictionary<string, List<string>>> AllOptions { get; set; }
+        public List<Options> Options { get; set; }
+        public List<Options> AllOptions { get; set; }
+    }
+
+    public class Options
+    {
+        public string Name { get; set; }
+        public string Option { get; set; }
     }
 }
