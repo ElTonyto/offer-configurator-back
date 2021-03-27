@@ -24,6 +24,12 @@ namespace OfferConfigurator.Services
         public List<Product> Get() =>
             _product.Find(product => true).ToList();
 
+        public List<Product> GetAllParent() =>
+            _product.Find<Product>(product => product.ParentId == null).ToList();
+
+        public List<Product> GetAllChild() =>
+            _product.Find<Product>(product => product.ParentId != null).ToList();
+
         public Product Get(string id) =>
             _product.Find<Product>(product => product.Id == id).FirstOrDefault();
 
