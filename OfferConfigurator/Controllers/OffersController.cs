@@ -20,20 +20,43 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Offer>> Get() =>
-             StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all offers", Data = _offerService.Get() });
+        public ActionResult<List<Offer>> Get([FromQuery] string isActive)
+        {
+            if (isActive == "true")
+            {
+                return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all active offers", Data = _offerService.GetAllActive() });
+            } else
+            {
+                return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all offers", Data = _offerService.Get() });
+            }
+        }
 
         [HttpGet("{id:length(24)}", Name = "GetOffer")]
-        public ActionResult<Offer> Get(string id)
+        public ActionResult<Offer> GetById([FromQuery] string isActive, string id)
         {
-            Offer offer = _offerService.Get(id);
-
-            if (offer == null)
+            if (isActive == "true")
             {
-                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
+                Offer offer = _offerService.GetAndActive(id);
+                if (offer == null)
+                {
+                    return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Active offer not found", Data = new List<object>() });
+                }
+
+                return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get an active offer", Data = offer });
+            }
+            else
+            {
+                Offer offer = _offerService.Get(id);
+
+                if (offer == null)
+                {
+                    return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Offer not found", Data = new List<object>() });
+                }
+
+                return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get an offer", Data = offer });
+
             }
 
-            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get an offer", Data = offer });
         }
 
         [HttpPost]

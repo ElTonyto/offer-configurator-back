@@ -24,8 +24,14 @@ namespace OfferConfigurator.Services
         public List<Offer> Get() =>
             _offer.Find(offer => true).ToList();
 
+        public List<Offer> GetAllActive() =>
+            _offer.Find(offer => offer.IsActive == true && DateTime.Now > offer.StartAt && DateTime.Now < offer.EndAt).ToList();
+
         public Offer Get(string id) =>
             _offer.Find<Offer>(offer => offer.Id == id).FirstOrDefault();
+
+        public Offer GetAndActive(string id) =>
+            _offer.Find<Offer>(offer => offer.Id == id && offer.IsActive == true && DateTime.Now > offer.StartAt && DateTime.Now < offer.EndAt).FirstOrDefault();
 
         public Offer Create(OfferBody offerBody, Product product)
         {
