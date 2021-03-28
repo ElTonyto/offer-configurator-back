@@ -42,6 +42,7 @@ namespace OfferConfigurator.Services
                 CreatedAt = DateTime.Now,
                 Price = productBody.Price,
                 Brand = productBody.Brand,
+                Img = productBody.Img,
                 CatalogId = productBody.CatalogId,
                 RemainingStock = productBody.RemainingStock,
                 Description = productBody.Description,

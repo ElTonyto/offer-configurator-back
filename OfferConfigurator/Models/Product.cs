@@ -18,6 +18,7 @@ namespace OfferConfigurator.Models
         public Nullable<int> RemainingStock { get; set; }
         public string Price { get; set; }
         public string Brand { get; set; }
+        public string Img { get; set; }
         public List<Options> Options { get; set; }
         public List<Options> AllOptions { get; set; }
     }
@@ -30,6 +31,7 @@ namespace OfferConfigurator.Models
         public string CatalogId { get; set; }
         public string Price { get; set; }
         public string Brand { get; set; }
+        public string Img { get; set; }
         public Nullable<int> RemainingStock { get; set; }
         public List<Options> Options { get; set; }
         public List<Options> AllOptions { get; set; }

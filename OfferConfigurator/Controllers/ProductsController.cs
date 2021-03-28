@@ -119,6 +119,7 @@ namespace OfferConfigurator.Controllers
             product.Description = (productBody.Description == null) ? product.Description : productBody.Description;
             product.Name = (productBody.Name == null) ? product.Name : productBody.Name;
             product.Price = (productBody.Price == null) ? product.Price : productBody.Price;
+            product.Img = (productBody.Img == null) ? product.Img : productBody.Img;
             product.RemainingStock = (productBody.RemainingStock == null) ? product.RemainingStock : productBody.RemainingStock;
             product.Options = (productBody.Options == null) ? product.Options : productBody.Options;
             product.AllOptions = (productBody.AllOptions == null) ? product.AllOptions : productBody.AllOptions;
