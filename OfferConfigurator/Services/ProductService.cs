@@ -30,6 +30,9 @@ namespace OfferConfigurator.Services
         public List<Product> GetAllChild() =>
             _product.Find<Product>(product => product.ParentId != null).ToList();
 
+        public List<Product> GetAllChildFromParent(string id) =>
+            _product.Find<Product>(product => product.ParentId == id).ToList();
+
         public Product Get(string id) =>
             _product.Find<Product>(product => product.Id == id).FirstOrDefault();
 

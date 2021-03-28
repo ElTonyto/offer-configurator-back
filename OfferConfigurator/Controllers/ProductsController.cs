@@ -36,16 +36,28 @@ namespace OfferConfigurator.Controllers
         }           
 
         [HttpGet("{id:length(24)}", Name = "GetProduct")]
-        public ActionResult<Product> GetById(string id)
+        public ActionResult<Product> GetById([FromQuery] string allChild, string id)
         {
-            Product product = _productService.Get(id);
-
-            if (product == null)
+         
+            if (allChild == "true")
             {
-                return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
-            }
+                List<Product> products = _productService.GetAllChildFromParent(id);
+                if (products == null)
+                {
+                    return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Products not found", Data = new List<object>() });
+                }
 
-            return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get a product", Data = product });
+                return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all child product from parent", Data = products });
+            } else
+            {
+                Product product = _productService.Get(id);
+                if (product == null)
+                {
+                    return StatusCode(404, new HttpResponse { Status = "Error", Type = "NOT_FOUND", Message = "Product not found", Data = new List<object>() });
+                }
+
+                return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get a product", Data = product });
+            }
         }
 
         [HttpPost]
