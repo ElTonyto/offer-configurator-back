@@ -20,12 +20,12 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Product>> Get([FromQuery] bool isParent)
+        public ActionResult<List<Product>> Get([FromQuery] string isParent)
         {
-            if (isParent)
+            if (isParent == "true")
             {
                 return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all parent products", Data = _productService.GetAllParent() });
-            } else if (!isParent)
+            } else if (isParent == "false")
             {
                 return StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all child products", Data = _productService.GetAllChild() });
             } else
@@ -36,7 +36,7 @@ namespace OfferConfigurator.Controllers
         }           
 
         [HttpGet("{id:length(24)}", Name = "GetProduct")]
-        public ActionResult<Product> Get(string id)
+        public ActionResult<Product> GetById(string id)
         {
             Product product = _productService.Get(id);
 
