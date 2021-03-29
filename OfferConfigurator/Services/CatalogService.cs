@@ -7,7 +7,7 @@ using OfferConfigurator.Databases;
 
 namespace OfferConfigurator.Services
 {
-    public class CatalogService
+    public class CatalogService : ICatalogService
     {
         private readonly IMongoCollection<Catalog> _catalog;
 
@@ -49,5 +49,16 @@ namespace OfferConfigurator.Services
 
         public void Remove(string id) =>
             _catalog.DeleteOne(catalog => catalog.Id == id);
+    }
+
+    public interface ICatalogService
+    {
+        public List<Catalog> Get();
+        public Catalog Get(string id);
+        public Catalog GetByName(string name);
+        public Catalog Create(CatalogBody catalogBody);
+        public void Update(string id, Catalog catalogIn);
+        public void Remove(Catalog catalogIn);
+        public void Remove(string id);
     }
 }

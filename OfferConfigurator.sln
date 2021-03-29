@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfferConfigurator", "OfferConfigurator\OfferConfigurator.csproj", "{6B20C043-B197-463C-947B-6F771E7A9287}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfferConfiguratorTest", "OfferConfiguratorTest\OfferConfiguratorTest.csproj", "{BD25FFDD-10F5-404C-81B4-403C38CD69B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +15,9 @@ Global
 		{6B20C043-B197-463C-947B-6F771E7A9287}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B20C043-B197-463C-947B-6F771E7A9287}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B20C043-B197-463C-947B-6F771E7A9287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD25FFDD-10F5-404C-81B4-403C38CD69B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD25FFDD-10F5-404C-81B4-403C38CD69B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD25FFDD-10F5-404C-81B4-403C38CD69B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD25FFDD-10F5-404C-81B4-403C38CD69B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

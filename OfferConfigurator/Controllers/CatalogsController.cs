@@ -12,19 +12,19 @@ namespace OfferConfigurator.Controllers
     [ApiController]
     public class CatalogsController : ControllerBase
     {
-        private readonly CatalogService _catalogService;
+        private readonly ICatalogService _catalogService;
 
-        public CatalogsController(CatalogService catalogService)
+        public CatalogsController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
         }
 
         [HttpGet]
-        public ActionResult<List<Catalog>> Get() =>
+        public ObjectResult Get() =>
             StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all catalogs", Data = _catalogService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetCatalog")]
-        public ActionResult<Catalog> Get(string id)
+        public ObjectResult Get(string id)
         {
             Catalog catalog = _catalogService.Get(id);
 
@@ -37,7 +37,7 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Catalog> Create([FromHeader(Name = "X-ROLE")][Required] string role, CatalogBody catalogBody)
+        public ObjectResult Create([FromHeader(Name = "X-ROLE")][Required] string role, CatalogBody catalogBody)
         {
             if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
             if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
@@ -56,7 +56,7 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public ActionResult<Catalog> Update([FromHeader(Name = "X-ROLE")][Required] string role, string id, CatalogBody catalogBody)
+        public ObjectResult Update([FromHeader(Name = "X-ROLE")][Required] string role, string id, CatalogBody catalogBody)
         {
             if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
             if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
@@ -77,7 +77,7 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete([FromHeader(Name = "X-ROLE")][Required] string role, string id)
+        public ObjectResult Delete([FromHeader(Name = "X-ROLE")][Required] string role, string id)
         {
             if (role == null) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is not found", Data = new List<object>() });
             if (!HeaderRole.Verify(role)) return StatusCode(400, new HttpResponse { Status = "Error", Type = "BAD_REQUEST", Message = "Role is incorrect", Data = new List<object>() });
