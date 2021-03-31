@@ -46,7 +46,7 @@ namespace OfferConfigurator
 
             services.AddSingleton<OfferService>();
             services.AddSingleton<ProductService>();
-            services.AddSingleton<CatalogService>();
+            services.AddSingleton<ICatalogService, CatalogService>();
             services.AddSingleton<CartService>();
             services.AddControllers();
             services.AddSwaggerGen();

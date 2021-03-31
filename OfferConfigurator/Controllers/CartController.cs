@@ -19,11 +19,11 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Catalog>> Get() =>
+        public ActionResult<List<Cart>> Get() =>
             StatusCode(200, new HttpResponse { Status = "Success", Type = "OK", Message = "Get all cart", Data = _cartService.Get() });
 
         [HttpGet("{id:length(24)}", Name = "GetCart")]
-        public ActionResult<Catalog> Get(string id)
+        public ActionResult<Cart> Get(string id)
         {
             Cart cart = _cartService.Get(id);
 
@@ -45,7 +45,7 @@ namespace OfferConfigurator.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public ActionResult<Offer> Update(string id, CartBody cartBody)
+        public ActionResult<Cart> Update(string id, CartBody cartBody)
         {
             Cart cart = _cartService.Get(id);
 
