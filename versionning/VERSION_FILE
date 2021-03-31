@@ -1,6 +1,6 @@
 ## Uncomment what you want to increment in
 ## MAJOR.MINOR.PATCH (and comment other lines)
 
-MAJOR
+#MAJOR
 #MINOR
-#PATCH
+PATCH
